@@ -1,0 +1,32 @@
+[
+  {
+    "channel": "C08ABCD1234",
+    "message_ts": "1756036800.001900",
+    "thread_ts": null,
+    "author": "U04H2K9AA",
+    "text": "Saving a new admin from the Owner Panel throws a 500. Steps: open Owner Panel, click Add admin, fill the form with a valid e-mail, submit. Expected the admin to appear in the table. Actual: red toast saying 'Internal Server Error' and the table does not change.",
+    "permalink": "https://dneprokos.slack.com/archives/C08ABCD1234/p1756036800001900",
+    "reactions": [],
+    "latest_reply_ts": null
+  },
+  {
+    "channel": "C08ABCD1234",
+    "message_ts": "1756040113.000300",
+    "thread_ts": null,
+    "author": "U04H2K9BB",
+    "text": "Search on the games page returns nothing for 'zelda' even though the catalogue has three Zelda titles. Expected the three cards to render, actual is the empty state.",
+    "permalink": "https://dneprokos.slack.com/archives/C08ABCD1234/p1756040113000300",
+    "reactions": [],
+    "latest_reply_ts": null
+  },
+  {
+    "channel": "C08ABCD1234",
+    "message_ts": "1756041999.000100",
+    "thread_ts": null,
+    "author": "U04H2K9CC",
+    "text": "app broken",
+    "permalink": "https://dneprokos.slack.com/archives/C08ABCD1234/p1756041999000100",
+    "reactions": [],
+    "latest_reply_ts": null
+  }
+]

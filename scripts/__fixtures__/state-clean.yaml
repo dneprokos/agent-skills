@@ -1,0 +1,92 @@
+# A state file that satisfies the whole schema. Every other state fixture is this document with one
+# defect introduced, so a violation that is not the expected one is a regression somewhere else.
+ticket_id: SCRUM-900
+phase: test_automation
+status: in_progress
+mode: auto
+current_step: "2.1a"
+
+configuration:
+  review_requirements: true
+  non_e2e_coverage_strategy: create_follow_up_ticket
+  max_review_iterations: 2
+  max_design_iterations: 1
+  batch_threshold: 15
+  batch_size: 10
+  jira_target_status: In Review
+  on_blocked_alternative_flow: escalate
+  on_missing_api_surface: escalate
+
+iterations:
+  design: 1
+  api: 0
+  ui: 0
+
+artifacts:
+  requirements: requirements/SCRUM-900-requirements.md
+  test_design: test-design/SCRUM-900-test-design.md
+  metrics: .workflow/metrics/SCRUM-900.jsonl
+  api_surface:
+    status: partial
+    provenance: openapi
+    match_basis: "tag (4 operations)"
+    matched_operations: 4
+    spec_gaps: 7
+    decided_by: null
+    decided_at: null
+
+test_design:
+  status: classified
+  review_status: passed
+  batches: []
+  open_questions:
+    - "[REQ-M1] no status code stated for a duplicate e-mail"
+  # The reviewer's block, verbatim. It is prose, it is long, and it contains every character that
+  # would break a quoted scalar — a colon, a hash, both quote marks and a leading dash on a line.
+  last_findings: |-
+    Iteration 1 verdict: Needs Revision. Resolved 4 of 6.
+    Outstanding: [DESIGN-M2] the decision table claims "no merges", which its own rows contradict.
+    - SCN-004 cites DT-01/R3 while asserting nothing; count it traced-only, not exercised.
+    - SCN-007's Expected: still reads 'unknown: duplicate-email status code'.
+    Routed: generator gets M2; classifier gets nothing this round. #2 of a capped loop.
+  unapproved_unknowns:
+    - { scenario: SCN-007, missing: "duplicate-email status code" }
+  blocked_scenarios: [SCN-007]
+  approved_assumptions: []
+
+automation:
+  api:
+    status: implemented
+    not_applicable_reason: null
+    report: .workflow/reports/SCRUM-900-api-implementation.md
+    implemented_scenarios: [SCN-001, SCN-002]
+    created_tests: [tests/api/admin-users.spec.ts]
+    review_status: pending
+    last_findings: null
+  ui:
+    status: not_applicable
+    not_applicable_reason: "no scenario was assigned E2E UI at Checkpoint B"
+    report: .workflow/reports/SCRUM-900-ui-implementation.md
+    implemented_scenarios: []
+    created_tests: []
+    review_status: pending
+    last_findings: null
+
+pull_request: null
+jira:
+  status: In Progress
+  handback_status: pending
+  comment: pending
+follow_up_tickets: []
+requirement_gaps: []
+final_decision: pending
+declined:
+  at_step: null
+  question: null
+  reason: null
+
+history:
+  - { step: "1.1", agent: qa-requirements-collector, result: OK, at: 2026-08-09,
+      note: "4 FR, 1 AC" }
+  - { step: "1.5", agent: qa-scenario-reviewer, result: "Needs Revision", at: 2026-08-09,
+      note: "6 findings; iterations.design 0 -> 1 of 2" }

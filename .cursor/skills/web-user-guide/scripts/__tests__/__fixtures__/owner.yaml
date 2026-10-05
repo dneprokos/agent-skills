@@ -1,0 +1,14 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - link "RETRO GAMES" [ref=e7] [cursor=pointer]:
+      - /url: /
+    - button "Logout" [ref=e14] [cursor=pointer]
+  - main [ref=e15]:
+    - heading "OWNER DASHBOARD" [level=1] [ref=e20]
+    - button "Add Admin" [ref=e21] [cursor=pointer]
+    - table [ref=e30]:
+      - rowgroup [ref=e31]:
+        - row "Email Role Last Login" [ref=e32]
+      - rowgroup [ref=e33]:
+        - row "admin1 admin Never" [ref=e34]
+        - row "admin2 admin Never" [ref=e35]

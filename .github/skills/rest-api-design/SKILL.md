@@ -14,7 +14,7 @@ description: >-
 
 Guide **design** and **review** of HTTP JSON APIs that follow REST-oriented conventions. Combine checklist-driven feedback with actionable recommendations.
 
-If the user needs **test cases** for an existing endpoint, prefer the separate **api-test-scenario-generator** skill. This skill focuses on **shape, semantics, and documentation** of the API itself.
+If the user needs **test cases** for an existing endpoint, prefer the separate **api-test-scenario-rtm-generator** skill. This skill focuses on **shape, semantics, and documentation** of the API itself.
 
 ## When this skill applies
 

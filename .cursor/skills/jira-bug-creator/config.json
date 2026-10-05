@@ -1,0 +1,94 @@
+{
+  "site": "https://dneprokos-test.atlassian.net",
+  "cloudId": "66b3ea22-1466-4c68-afca-75d07051091c",
+  "projectKey": "SCRUM",
+  "projectName": "Dneprokos-test-project",
+  "issueType": "Bug",
+  "fields": {
+    "detectionPhase": {
+      "id": "customfield_10203",
+      "name": "Defect Detection Phase",
+      "required": true,
+      "values": [
+        "Development",
+        "Production"
+      ],
+      "default": "Development"
+    },
+    "priority": {
+      "id": "priority",
+      "values": [
+        "Highest",
+        "High",
+        "Medium",
+        "Low",
+        "Lowest"
+      ],
+      "default": "Medium"
+    }
+  },
+  "severityToPriority": {
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low"
+  },
+  "sourceLabels": {
+    "playwright": [
+      "e2e-failure",
+      "automation"
+    ],
+    "finding": [
+      "static-defect-scan"
+    ],
+    "manual": []
+  },
+  "dedupe": {
+    "lookbackDays": 180,
+    "minWordLength": 4,
+    "maxTerms": 5,
+    "stopWords": [
+      "with",
+      "when",
+      "that",
+      "this",
+      "from",
+      "into",
+      "than",
+      "then",
+      "does",
+      "have",
+      "been",
+      "being",
+      "should",
+      "would",
+      "could",
+      "instead",
+      "while",
+      "after",
+      "before",
+      "returns",
+      "return",
+      "fails",
+      "failed",
+      "error",
+      "errors",
+      "test",
+      "tests",
+      "page",
+      "does not",
+      "cannot"
+    ]
+  },
+  "paths": {
+    "playwrightReport": "test-results/results.json",
+    "scanFindings": ".static-scan/findings.json",
+    "outDir": ".jira-bug"
+  },
+  "repo": {
+    "defaultBaseUrl": "http://localhost:3000",
+    "testCommand": "npx playwright test {file} -g \"{title}\"",
+    "testPathPrefix": "tests/",
+    "playwrightPreconditions": [],
+    "findingPreconditions": []
+  }
+}

@@ -1,0 +1,225 @@
+{
+  "inputValidation": {
+    "stringFields": {
+      "maxLength": 255,
+      "minLength": 1,
+      "patterns": ["email", "url", "phone", "uuid"]
+    },
+    "numericFields": {
+      "integerRange": [-2147483648, 2147483647],
+      "positiveInteger": [1, 2147483647],
+      "floatRange": [-3.4e38, 3.4e38]
+    },
+    "dateFields": {
+      "formats": ["ISO8601", "RFC3339"],
+      "futureOnly": false,
+      "pastOnly": false
+    },
+    "arrayFields": {
+      "maxItems": 100,
+      "minItems": 0,
+      "uniqueItems": true
+    }
+  },
+  "authenticationTypes": [
+    "Bearer token",
+    "API key",
+    "Basic auth",
+    "OAuth 2.0",
+    "JWT",
+    "None"
+  ],
+  "commonErrorCodes": {
+    "400": "Bad Request — Invalid input data or malformed JSON",
+    "401": "Unauthorized — Authentication required or token invalid/expired",
+    "403": "Forbidden — Authenticated but insufficient permissions",
+    "404": "Not Found — Resource does not exist",
+    "405": "Method Not Allowed — HTTP method not supported on this endpoint",
+    "406": "Not Acceptable — Requested media type not supported",
+    "409": "Conflict — Resource already exists, duplicate key, or delete-with-dependents",
+    "412": "Precondition Failed — ETag/If-Match mismatch (optimistic concurrency)",
+    "413": "Content Too Large — Request body exceeds size limit",
+    "415": "Unsupported Media Type — Wrong Content-Type (e.g., not application/json)",
+    "422": "Unprocessable Entity — Structurally valid JSON but fails business validation",
+    "428": "Precondition Required — If-Match header required but not sent",
+    "429": "Too Many Requests — Rate limit exceeded",
+    "500": "Internal Server Error — Unexpected server error"
+  },
+  "httpMethods": {
+    "GET": {
+      "idempotent": true,
+      "safe": true,
+      "expectedCodes": [200, 400, 401, 403, 404, 405, 406]
+    },
+    "POST": {
+      "idempotent": false,
+      "safe": false,
+      "expectedCodes": [201, 400, 401, 403, 405, 409, 413, 415, 422]
+    },
+    "PUT": {
+      "idempotent": true,
+      "safe": false,
+      "expectedCodes": [200, 204, 400, 401, 403, 404, 405, 409, 412, 413, 415, 422, 428]
+    },
+    "PATCH": {
+      "idempotent": false,
+      "safe": false,
+      "expectedCodes": [200, 204, 400, 401, 403, 404, 405, 409, 412, 413, 415, 422]
+    },
+    "DELETE": {
+      "idempotent": true,
+      "safe": false,
+      "expectedCodes": [200, 204, 401, 403, 404, 405, 409]
+    }
+  },
+  "securityScenarios": {
+    "owaspApiTop10": [
+      {
+        "id": "API1",
+        "name": "BOLA / IDOR",
+        "description": "Object-level authorization: user A attempts to access or modify user B's resource using a valid token",
+        "expectedResult": "403 Forbidden (not 200 or 404)",
+        "testType": "Security",
+        "testLevel": "Integration"
+      },
+      {
+        "id": "API2",
+        "name": "Broken Authentication",
+        "description": "Request with missing token, expired token, or malformed token",
+        "expectedResult": "401 Unauthorized",
+        "testType": "Security",
+        "testLevel": "Integration"
+      },
+      {
+        "id": "API3",
+        "name": "Excessive Data Exposure",
+        "description": "Response body contains sensitive fields (password hash, internal IDs, private metadata) that should not be returned",
+        "expectedResult": "Sensitive fields absent from response",
+        "testType": "Security",
+        "testLevel": "Integration"
+      },
+      {
+        "id": "API5",
+        "name": "BFLA — Function-Level Authorization",
+        "description": "Low-privilege user calls an admin-only endpoint (e.g., bulk delete, role assignment)",
+        "expectedResult": "403 Forbidden",
+        "testType": "Security",
+        "testLevel": "Integration"
+      },
+      {
+        "id": "API6",
+        "name": "Mass Assignment",
+        "description": "Request body contains extra privileged fields (e.g., role, isAdmin, ownerId) that should be ignored",
+        "expectedResult": "Privileged fields silently ignored; 200/201 with unmodified privileged values",
+        "testType": "Security",
+        "testLevel": "Integration"
+      },
+      {
+        "id": "API8",
+        "name": "Injection",
+        "description": "Input fields contain SQL injection, XSS payloads, or OS command fragments",
+        "expectedResult": "Input sanitized; no code executed; 400 or 422",
+        "testType": "Security",
+        "testLevel": "Unit"
+      }
+    ]
+  },
+  "restSemantics": {
+    "idempotency": {
+      "description": "Repeat identical PUT or DELETE requests must return the same result (2nd call returns same 200/204, not 409)",
+      "methods": ["PUT", "DELETE"]
+    },
+    "optimisticConcurrency": {
+      "description": "If API uses ETags/If-Match, send a stale ETag and expect 412; send no ETag when required and expect 428",
+      "methods": ["PUT", "PATCH"]
+    },
+    "contentNegotiation": {
+      "description": "Send wrong Content-Type (e.g., text/plain) for mutation endpoints → 415; request unsupported Accept type → 406",
+      "methods": ["POST", "PUT", "PATCH"]
+    },
+    "payloadTooLarge": {
+      "description": "Send a request body that exceeds the server payload size limit → 413",
+      "methods": ["POST", "PUT", "PATCH"]
+    },
+    "methodNotAllowed": {
+      "description": "Call an unsupported HTTP method on a known endpoint (e.g., DELETE on a read-only resource) → 405",
+      "methods": ["GET", "POST", "PUT", "PATCH", "DELETE"]
+    },
+    "locationHeader": {
+      "description": "Successful POST that creates a resource must return a Location header pointing to the new resource",
+      "methods": ["POST"]
+    },
+    "bodyPathMismatch": {
+      "description": "PUT where the ID in the URL differs from the ID in the body — must return 400 or 422, not silently override",
+      "methods": ["PUT"]
+    },
+    "patchNullVsOmit": {
+      "description": "PATCH: null explicitly clears a field; omitting the key leaves the field unchanged — test both behaviors",
+      "methods": ["PATCH"]
+    },
+    "duplicatePost": {
+      "description": "POST with identical unique fields a second time → 409 Conflict",
+      "methods": ["POST"]
+    },
+    "deleteWithDependents": {
+      "description": "DELETE a resource that has dependent child records — confirm 409 Conflict or cascaded delete per API contract",
+      "methods": ["DELETE"]
+    },
+    "softVsHardDelete": {
+      "description": "DELETE — confirm whether the operation is soft (status flag) or hard (permanent removal); subsequent GET should reflect the correct state",
+      "methods": ["DELETE"]
+    }
+  },
+  "boundaryValueAnalysis": {
+    "string": [
+      "empty string (length 0)",
+      "exactly minLength",
+      "minLength - 1",
+      "exactly maxLength",
+      "maxLength + 1",
+      "whitespace-only",
+      "unicode / multibyte characters",
+      "null (if field is nullable)"
+    ],
+    "numeric": [
+      "0",
+      "1",
+      "-1",
+      "minimum allowed value",
+      "minimum - 1",
+      "maximum allowed value",
+      "maximum + 1",
+      "null (if nullable)"
+    ],
+    "enum": [
+      "each valid enum value",
+      "an unknown/invalid string",
+      "empty string",
+      "null (if nullable)"
+    ],
+    "date": [
+      "valid ISO 8601 date",
+      "past date",
+      "future date",
+      "today/current timestamp",
+      "invalid format",
+      "null (if nullable)"
+    ],
+    "array": [
+      "empty array []",
+      "single item",
+      "exactly maxItems",
+      "maxItems + 1",
+      "duplicate items (if uniqueItems)",
+      "null (if nullable)"
+    ],
+    "uuid": [
+      "valid UUID v4",
+      "all-zeros UUID",
+      "non-UUID string",
+      "integer string",
+      "empty string"
+    ]
+  }
+}
+

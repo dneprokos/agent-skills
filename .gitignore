@@ -53,8 +53,8 @@ wheels/
 /github-pr.local.json
 **/git-pr-creator/config/github-pr.local.json
 
-# jira-mcp-assistant local config (never commit)
-**/jira-mcp-assistant/config/jira-defaults.local.json
+# jira-issue-* skills local config (never commit)
+**/jira-*/config/jira-defaults.local.json
 
 # Environment variables
 .env
@@ -62,3 +62,22 @@ wheels/
 .env.development.local
 .env.test.local
 .env.production.local
+
+# QA workflow state, implementation reports and sub-agent metrics (agent-metrics hook)
+/.workflow/
+
+# Generated architecture-review output (agentic-workflow-review skill's default --out)
+/docs/review.md
+
+# Jira bug drafts (jira-bug-creator, regenerated on every run)
+/.jira-bug/
+
+# Bug leakage export, metrics and dashboard (jira-metrics-bug-leakage, regenerated on every run)
+/.bug-leakage/
+
+# Slack triage per-run scratch (slack-bug-triage plugin). The journal.jsonl ledger stays tracked.
+/.slack-triage/runs/
+/.slack-triage/*.bak
+
+# playwright-cli exploration artifacts (snapshots, console logs)
+/.playwright-cli/

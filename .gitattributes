@@ -1,0 +1,7 @@
+# Fixtures and script tests are compared byte for byte (regex anchored on `\n`, diffs of re-emitted
+# documents). With `core.autocrlf` on, the same file would be CRLF on one machine and LF on another,
+# and a transform that silently matches nothing turns a test green while testing nothing.
+scripts/__fixtures__/** text eol=lf
+scripts/__tests__/** text eol=lf
+plugins/slack-bug-triage/scripts/__fixtures__/** text eol=lf
+plugins/slack-bug-triage/scripts/__tests__/** text eol=lf

@@ -1,0 +1,48 @@
+[
+  {
+    "id": "eval-vague-performance",
+    "description": "Single vague requirement with no context — tests N/A grading and critical-floor flag",
+    "prompt": "Review this requirement: 'The system should quickly load user data and must not fail.'",
+    "expect": [
+      "Clear.*❌",
+      "Verifiable.*❌",
+      "Atomic.*❌",
+      "➖",
+      "critical floor"
+    ]
+  },
+  {
+    "id": "eval-security-negative",
+    "description": "Legitimate negative security requirement — must NOT be penalized on Positive",
+    "prompt": "Review this requirement: 'The system shall not expose personally identifiable information to unauthenticated users.'",
+    "expect": [
+      "Positive.*✅"
+    ],
+    "must_not_contain": [
+      "Positive.*❌",
+      "Positive.*⚠️"
+    ]
+  },
+  {
+    "id": "eval-no-context-traceable",
+    "description": "Requirements with no business goal provided — Traceable should be N/A not ❌",
+    "prompt": "Review these requirements (no project context given):\n1. The user shall be able to reset their password via email.\n2. The system shall send a confirmation email within 30 seconds of account creation.",
+    "expect": [
+      "➖",
+      "Traceable"
+    ],
+    "must_not_contain": [
+      "Traceable.*0\\.0",
+      "Traceable.*❌"
+    ]
+  },
+  {
+    "id": "eval-high-quality",
+    "description": "Well-written requirements — should score ≥ 8.0 overall and open with positive note",
+    "prompt": "Review these requirements:\n1. The system shall authenticate users via OAuth 2.0. A login attempt that fails three consecutive times shall lock the account for 15 minutes.\n2. The API shall return a response within 200 ms at the 95th percentile under a load of 500 concurrent users.",
+    "expect": [
+      "Overall.*[89]\\.",
+      "well"
+    ]
+  }
+]

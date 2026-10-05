@@ -1,0 +1,45 @@
+{
+  "site": "https://dneprokos-test.atlassian.net",
+  "cloudId": "66b3ea22-1466-4c68-afca-75d07051091c",
+  "projectKey": "SCRUM",
+  "issueType": "Bug",
+
+  "detectionPhase": {
+    "id": "customfield_10203",
+    "name": "Defect Detection Phase",
+    "leaked": "Production",
+    "contained": "Development"
+  },
+
+  "priorityWeights": {
+    "Highest": 5,
+    "High": 4,
+    "Medium": 3,
+    "Low": 2,
+    "Lowest": 1
+  },
+
+  "areaLabels": [
+    "validation",
+    "security",
+    "catalogue",
+    "filtering",
+    "error-handling",
+    "performance",
+    "configuration",
+    "user-management",
+    "search",
+    "api"
+  ],
+
+  "targets": {
+    "leakageRate": 0.2,
+    "warnAt": 0.3,
+    "minSampleForTrend": 20
+  },
+
+  "paths": {
+    "outDir": ".bug-leakage",
+    "issues": ".bug-leakage/issues.json"
+  }
+}

@@ -1,0 +1,82 @@
+[
+  {
+    "channel": "C08ABCD1234",
+    "message_ts": "1756050010.000110",
+    "thread_ts": null,
+    "author": "U04H2K9AA",
+    "text": "Owner Panel add-admin returns 500. Steps: open Owner Panel, click Add admin, submit a valid e-mail. Expected the row to appear, actual a red toast and no row.",
+    "permalink": "https://dneprokos.slack.com/archives/C08ABCD1234/p1756050010000110",
+    "reactions": [],
+    "latest_reply_ts": null
+  },
+  {
+    "channel": "C08ABCD1234",
+    "message_ts": "1756050011.000111",
+    "thread_ts": null,
+    "author": "U04H2K9BB",
+    "text": "Game search returns the empty state for a term that has matches. Steps: search zelda. Expected three cards, actual nothing.",
+    "permalink": "https://dneprokos.slack.com/archives/C08ABCD1234/p1756050011000111",
+    "reactions": [],
+    "latest_reply_ts": null
+  },
+  {
+    "channel": "C08ABCD1234",
+    "message_ts": "1756050012.000112",
+    "thread_ts": null,
+    "author": "U04H2K9CC",
+    "text": "Deleting an admin leaves the row on screen until a reload. Expected the table to refresh, actual the row stays.",
+    "permalink": "https://dneprokos.slack.com/archives/C08ABCD1234/p1756050012000112",
+    "reactions": [],
+    "latest_reply_ts": null
+  },
+  {
+    "channel": "C08ABCD1234",
+    "message_ts": "1756050013.000113",
+    "thread_ts": null,
+    "author": "U04H2K9DD",
+    "text": "PUT /api/games/:id accepts an unknown field and stores it. Expected the request rejected, actual the document gains the key.",
+    "permalink": "https://dneprokos.slack.com/archives/C08ABCD1234/p1756050013000113",
+    "reactions": [],
+    "latest_reply_ts": null
+  },
+  {
+    "channel": "C08ABCD1234",
+    "message_ts": "1756050014.000114",
+    "thread_ts": null,
+    "author": "U04H2K9EE",
+    "text": "Login with a valid password after three failures still says invalid credentials. Expected a session, actual a 401.",
+    "permalink": "https://dneprokos.slack.com/archives/C08ABCD1234/p1756050014000114",
+    "reactions": [],
+    "latest_reply_ts": null
+  },
+  {
+    "channel": "C08ABCD1234",
+    "message_ts": "1756050015.000115",
+    "thread_ts": null,
+    "author": "U04H2K9FF",
+    "text": "The games list ignores the page query parameter. Steps: request page=2. Expected the second page, actual the first.",
+    "permalink": "https://dneprokos.slack.com/archives/C08ABCD1234/p1756050015000115",
+    "reactions": [],
+    "latest_reply_ts": null
+  },
+  {
+    "channel": "C08ABCD1234",
+    "message_ts": "1756050016.000116",
+    "thread_ts": null,
+    "author": "U04H2K9GG",
+    "text": "lastLogin renders Never for an admin who signed in this morning. Expected the timestamp, actual the literal Never.",
+    "permalink": "https://dneprokos.slack.com/archives/C08ABCD1234/p1756050016000116",
+    "reactions": [],
+    "latest_reply_ts": null
+  },
+  {
+    "channel": "C08ABCD1234",
+    "message_ts": "1756050017.000117",
+    "thread_ts": null,
+    "author": "U04H2K9HH",
+    "text": "Rating accepts 11 through the API. Expected a validation error, actual a stored rating of 11.",
+    "permalink": "https://dneprokos.slack.com/archives/C08ABCD1234/p1756050017000117",
+    "reactions": [],
+    "latest_reply_ts": null
+  }
+]

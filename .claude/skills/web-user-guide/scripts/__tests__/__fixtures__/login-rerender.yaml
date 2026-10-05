@@ -1,0 +1,18 @@
+- generic [ref=e53]:
+  - navigation [ref=e54]:
+    - link "RETRO GAMES" [ref=e57]:
+      - /url: /
+    - link "Login" [ref=e514]:
+      - /url: /login
+  - main [ref=e515]:
+    - heading "LOGIN" [level=2] [ref=e522]
+    - paragraph [ref=e523]: Enter your credentials
+    - textbox "Email Address" [ref=e532]:
+      - /placeholder: Enter your email
+    - textbox "Password" [ref=e539]:
+      - /placeholder: Enter your password
+    - button "Login" [ref=e544]
+    - paragraph [ref=e547]:
+      - text: Don't have an owner account?
+      - link "Register here" [ref=e548]:
+        - /url: /register

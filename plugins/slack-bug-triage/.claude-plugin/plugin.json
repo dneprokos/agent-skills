@@ -1,0 +1,16 @@
+{
+  "name": "slack-bug-triage",
+  "description": "Triages a Slack bug-reports channel into Jira: reads the channel, claims each new message in a git-tracked ledger, drafts a bug from it, checks the backlog for an existing ticket, then either files a new bug or points the reporter at the one that already exists — replying in thread and marking the message every time.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Kostiantyn Teltov",
+    "url": "https://github.com/dneprokos"
+  },
+  "keywords": [
+    "slack",
+    "jira",
+    "bug-triage",
+    "qa",
+    "workflow"
+  ]
+}

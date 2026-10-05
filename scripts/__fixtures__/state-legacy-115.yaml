@@ -1,0 +1,104 @@
+# A real state file from an earlier run of this workflow (SCRUM-115, ticket id rewritten), kept as
+# a fixture so schema drift in the live files stays a warning and never becomes a crash. It invents
+# four keys the schema does not know and omits several optional ones. Migration is a report.
+ticket_id: SCRUM-901
+phase: test_design
+status: escalated
+mode: auto
+current_step: "1.5"
+
+configuration:
+  review_requirements: true
+  non_e2e_coverage_strategy: create_follow_up_ticket
+  max_review_iterations: 2
+
+iterations:
+  design: 2
+  api: 0
+  ui: 0
+
+artifacts:
+  requirements: requirements/SCRUM-901-requirements.md
+  test_design: test-design/SCRUM-901-test-design.md
+
+test_design:
+  status: classified
+  review_status: needs_revision
+  last_findings_ids: [DESIGN-C1, DESIGN-M1, DESIGN-M4, DESIGN-M5, DESIGN-M6, DESIGN-m2, DESIGN-m3, DESIGN-m4, DESIGN-m5, DESIGN-m6]
+  findings_resolved_ids: [DESIGN-M2, DESIGN-M3, DESIGN-m1]
+  escalation_reason: >-
+    max_review_iterations (2) reached with the verdict still Needs Revision. Root cause named by the
+    reviewer: the scenario generator read its revision contract as append-only and treated every finding
+    that required editing an existing line as unfixable, appending commentary instead. The Critical
+    finding DESIGN-C1 therefore survived both iterations intact — SCN-011 still asserts
+    "Expected: The Guest returns to a catalogue grid view" for browser Back, which no requirement states —
+    and the appended SCN-017 now contradicts it (DESIGN-M5, one transition with two instructions).
+  human_decision_required: >-
+    Either (a) correct the append-only reading of docs/automation/revision-contract.md so a revision may
+    edit the lines its findings name, then re-run design review; or (b) authorise a full regenerate of the
+    test design; or (c) answer the underlying requirements gaps on SCRUM-901 ([REQ-C1] what proves the
+    detail page rendered, [REQ-C2] the <id> format, [REQ-C3] the detail-page field list, plus the Back
+    behaviour behind DESIGN-C1) so the design has stated values to assert. The orchestrator will not pass a
+    regenerate token or approve an assumption on anyone's behalf.
+  open_questions:
+    - "[REQ-C1]/[REQ-C3] What proves 'the detail page renders'? No element, test hook or field list is stated."
+    - "[REQ-C2] What is the format of <id> in /game/<id> — numeric, UUID or slug?"
+    - "[REQ-M2]/[REQ-M4] What does a Guest see when the game behind the clicked card no longer exists?"
+    - "[REQ-M5]/[REQ-M6] What happens on a malformed or over-long <id>? No validation rule stated."
+    - "[REQ-M6]/[REQ-M9] What is the behaviour when the detail fetch fails (404/5xx) or times out? No endpoint contract stated."
+    - "Is /game/<id> deep-linkable and public without a session?"
+    - "[REQ-M7] Does an authenticated Admin/Owner see the same detail page as a Guest?"
+    - "[REQ-M8] Must browser Back restore the catalogue pagination page?"
+    - "[REQ-M1] Must keyboard activation (Enter/Space) on a focused card navigate?"
+    - "[REQ-M8] Is there an upper bound on navigation/detail-load time?"
+  last_findings: null
+  unapproved_unknowns:
+    - { scenario: SCN-001, missing: "render-proof hook / detail-page field list [REQ-C1,REQ-C3]" }
+    - { scenario: SCN-002, missing: "id format [REQ-C2]" }
+    - { scenario: SCN-003, missing: "stale-game outcome [REQ-M2,REQ-M4]" }
+    - { scenario: SCN-004, missing: "malformed-id error behaviour [REQ-M5,REQ-M6]" }
+    - { scenario: SCN-005, missing: "detail-fetch failure behaviour [REQ-M6,REQ-M9]" }
+    - { scenario: SCN-006, missing: "timeout/retry behaviour [REQ-M9]" }
+    - { scenario: SCN-007, missing: "id format and length limit [REQ-C2,REQ-M5]" }
+    - { scenario: SCN-008, missing: "deep-link support [Open Questions]" }
+    - { scenario: SCN-009, missing: "authenticated-role outcome [REQ-M7]" }
+    - { scenario: SCN-010, missing: "authenticated + removed compound outcome [REQ-M2,REQ-M4,REQ-M7]" }
+    - { scenario: SCN-013, missing: "detail-page card affordance [REQ-C3]" }
+    - { scenario: SCN-014, missing: "keyboard-activation behaviour [REQ-M1]" }
+    - { scenario: SCN-015, missing: "navigation/load-time bound [REQ-M8]" }
+  blocked_scenarios: [SCN-003, SCN-004, SCN-005, SCN-006, SCN-007, SCN-008, SCN-009, SCN-010, SCN-013, SCN-014, SCN-015]
+  approved_assumptions: []
+
+automation:
+  api:
+    status: pending
+    report: .workflow/reports/SCRUM-901-api-implementation.md
+    implemented_scenarios: []
+    created_tests: []
+    review_status: pending
+    last_findings: null
+  ui:
+    status: pending
+    report: .workflow/reports/SCRUM-901-ui-implementation.md
+    implemented_scenarios: []
+    created_tests: []
+    review_status: pending
+    last_findings: null
+
+pull_request: null
+follow_up_tickets:
+  - { scenario: SCN-005, level: Component, note: "Detail-data fetch fails for a valid, existing game — level not implemented in this repository" }
+  - { scenario: SCN-006, level: Component, note: "Detail-data dependency is slow or unavailable — level not implemented in this repository" }
+  - { scenario: SCN-018, level: Unit, note: "Card's computed /game/<id> route target for a known game id — level not implemented in this repository" }
+final_decision: escalate
+
+history:
+  - { step: "1.1", agent: qa-requirements-collector, result: OK, note: "Story 'Navigate from catalogue card to game detail', epic SCRUM-88, 1 AC (AC-1), 1 FR (FR-05.13), 0 open questions, Jira To Do -> In Progress" }
+  - { step: "1.2", agent: qa-requirements-reviewer, result: OK, note: "7 QA notes, 8 missing-info, 4 risks, 8 open questions; BLOCKING [REQ-C1] AC-1 pass condition unobservable, [REQ-C2] <id> format undefined, [REQ-C3] no detail-page field list" }
+  - { step: "1.3", agent: qa-scenario-generator, result: OK, note: "16 scenarios SCN-001..016, EP 7/7 DT 4/4 ST 4/4, BVA N/A; 13 unapproved unknowns, 11 blocked scenarios. Auto mode does not approve; FR-05.13 and AC-1 both retain non-blocked coverage (SCN-001/002/011/012/016) so no escalation trigger" }
+  - { step: "1.4", agent: qa-scenario-classifier, result: OK, note: "16/16 assigned. E2E UI=14, Component=2, E2E API=0. SCN-005/SCN-006 Component -> follow-up. E2E share 87.5% justified. API stream has no scenarios to implement" }
+  - { step: "1.5", agent: qa-scenario-reviewer, result: "Needs Revision", iteration: 1, note: "8 findings (1C/3M/4m): DESIGN-C1 SCN-011 Back assertion is an unsupported guess; DESIGN-M1 EP-02/EP-03 overlap; DESIGN-M2 FR-05.13 has no sub-E2E coverage; DESIGN-M3 click-target parameter unmodelled; 4 minors. No classification errors -> all routed to the generator" }
+  - { step: "1.3", agent: qa-scenario-generator, result: OK, iteration: 1, mode: revision, note: "19 scenarios (added SCN-017/018/019). Addressed C1/M1/M2/M3/m1 by APPENDING; disputed m2/m3/m4 as blocked by the append-only revision contract. CONFLICT: DESIGN-C1's actual required change was an edit to SCN-011's Expected:, which that contract forbids, so the unsupported Back assertion still stands at Automation Suitability: Medium. EP coverage now 8/12 (EP-08..EP-11 uncovered). New scenarios carry no Assigned Level" }
+  - { step: "1.4", agent: qa-scenario-classifier, result: OK, iteration: 1, mode: revision, note: "19/19 assigned. Unit=1, Component=2, E2E UI=16, E2E API=0. Follow-up handoff now SCN-005, SCN-006, SCN-018. Level Assignment Summary regenerated for 19" }
+  - { step: "1.5", agent: qa-scenario-reviewer, result: "Needs Revision", iteration: 2, mode: re_review, note: "Resolved DESIGN-M2/M3/m1. Rejected the append-only dispute and held DESIGN-C1, M1, m2, m3, m4 outstanding; 5 new findings DESIGN-M4/M5/M6/m5/m6. Cap reached -> escalated, Phase 2 not entered" }
+

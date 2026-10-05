@@ -1,0 +1,11 @@
+[
+  {
+    "channel": "C08ABCD1234",
+    "message_ts": "1756036800",
+    "thread_ts": null,
+    "author": "U04H2K9AA",
+    "text": "A message whose ts lost its fractional half somewhere between Slack and the intake file.",
+    "permalink": "https://dneprokos.slack.com/archives/C08ABCD1234/p1756036800001900",
+    "reactions": []
+  }
+]

@@ -1,0 +1,47 @@
+{
+  "testTypes": {
+    "Happy Path": {
+      "description": "Normal successful operations with valid inputs",
+      "testLevel": "Integration",
+      "category": "positive"
+    },
+    "Boundary": {
+      "description": "Edge cases and limit testing — minimum, maximum, empty, overflow",
+      "testLevel": "Unit",
+      "category": "boundary"
+    },
+    "Negative": {
+      "description": "Error conditions and invalid inputs",
+      "testLevel": "Unit",
+      "category": "negative"
+    },
+    "Security": {
+      "description": "Authentication, authorization, and injection/OWASP tests",
+      "testLevel": "Integration",
+      "category": "security"
+    }
+  },
+  "testLevels": {
+    "Unit": "Fast, isolated tests — 70% of test suite. Validation, boundary cases, error conditions.",
+    "Integration": "Component interaction tests — 20% of test suite. API contracts, auth, happy paths.",
+    "E2E": "End-to-end critical path tests — 10% of test suite. Critical user journeys only."
+  },
+  "testingPyramidLevels": {
+    "unit": {
+      "description": "Fast, isolated tests for individual components",
+      "percentage": 70,
+      "focus": ["validation", "boundary cases", "error conditions", "negative paths"]
+    },
+    "integration": {
+      "description": "Tests for component interactions and API contracts",
+      "percentage": 20,
+      "focus": ["API contracts", "authentication", "authorization", "happy paths", "data flow"]
+    },
+    "e2e": {
+      "description": "End-to-end user journey tests",
+      "percentage": 10,
+      "focus": ["critical user paths", "cross-system workflows"]
+    }
+  }
+}
+

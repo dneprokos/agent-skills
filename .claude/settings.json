@@ -1,5 +1,7 @@
 {
-  "enabledMcpjsonServers": ["atlassian"],
+  "enabledMcpjsonServers": [
+    "atlassian"
+  ],
   "permissions": {
     "allow": [
       "Bash(pwsh * .github/skills/git-branch-creator/scripts/create-branch.ps1*)",
@@ -14,6 +16,18 @@
     ]
   },
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Task|Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "timeout": 5,
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/agent-metrics.mjs\" --pre"
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "Edit|Write",
@@ -25,6 +39,28 @@
           {
             "type": "command",
             "command": "pwsh -NoProfile -Command \"$d = $input | ConvertFrom-Json; $p = $d.tool_input.file_path; if ($p -match '\\.py$') { if (Get-Command ruff -ErrorAction SilentlyContinue) { ruff check $p } else { Write-Output 'ruff not found - skipping lint (install: pip install ruff)' } }\""
+          }
+        ]
+      },
+      {
+        "matcher": "Task|Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "timeout": 10,
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/agent-metrics.mjs\" --post"
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "matcher": "Task|Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "timeout": 10,
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/agent-metrics.mjs\" --failed"
           }
         ]
       }

@@ -145,7 +145,7 @@ Source: `.github/skills/`  |  Checked: <N> skills  |  Date: <YYYY-MM-DD>
 | Skill | Structure | Content | Scripts | Secrets | Permissions | Risk |
 |-------|:---------:|:-------:|:-------:|:-------:|:-----------:|:----:|
 | git-commit-creator | ✅ | ✅ | ✅ | ✅ | N/A | 🟢 Low |
-| jira-mcp-assistant | ✅ | ✅ | ✅ | ⚠️ | N/A | 🟡 Medium |
+| jira-issue-creator | ✅ | ✅ | ✅ | ⚠️ | N/A | 🟡 Medium |
 ```
 
 #### Findings section
@@ -155,7 +155,7 @@ For every non-passing result, add a subsection below the table:
 ```
 ## Findings
 
-### jira-mcp-assistant — Secrets ⚠️
+### jira-issue-creator — Secrets ⚠️
 `config/jira-defaults.local.json` exists. This file is gitignored and expected to stay
 local, but if accidentally committed it would expose Jira credentials. Verify it is
 listed in `.gitignore`.
