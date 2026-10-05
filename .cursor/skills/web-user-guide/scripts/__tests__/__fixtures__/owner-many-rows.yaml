@@ -1,0 +1,24 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - link "RETRO GAMES" [ref=e7] [cursor=pointer]:
+      - /url: /
+    - button "Logout" [ref=e14] [cursor=pointer]
+  - main [ref=e15]:
+    - heading "OWNER DASHBOARD" [level=1] [ref=e20]
+    - button "Add Admin" [ref=e21] [cursor=pointer]
+    - table [ref=e30]:
+      - rowgroup [ref=e31]:
+        - row "Email Role Last Login" [ref=e32]
+      - rowgroup [ref=e33]:
+        - row "admin1 admin Never" [ref=e34]
+        - row "admin2 admin Never" [ref=e35]
+        - row "admin3 admin Never" [ref=e43]
+        - row "admin4 admin Never" [ref=e44]
+        - row "admin5 admin Never" [ref=e45]
+        - row "admin6 admin Never" [ref=e46]
+        - row "admin7 admin Never" [ref=e47]
+        - row "admin8 admin Never" [ref=e48]
+        - row "admin9 admin Never" [ref=e49]
+        - row "admin10 admin Never" [ref=e410]
+        - row "admin11 admin Never" [ref=e411]
+        - row "admin12 admin Never" [ref=e412]

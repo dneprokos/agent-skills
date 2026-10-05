@@ -1,8 +1,0 @@
-{
-  "site": "dneprokos-test.atlassian.net",
-  "projectKey": "SCRUM",
-  "boardName": "Dneprokos-test-project",
-  "defaultFields": ["summary", "status", "priority", "assignee", "sprint"],
-  "defaultOrderBy": "Rank ASC",
-  "maxResultsPerPage": 25
-}

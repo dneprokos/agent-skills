@@ -41,7 +41,7 @@ blocks = [
             {"type": "mrkdwn", "text": f"*PR:*\n<{pr_url}|#{pr_num}>"},
             {"type": "mrkdwn", "text": f"*Repo:*\n{repo}"},
             {"type": "mrkdwn", "text": f"*Branch:*\n`{branch}`"},
-            {"type": "mrkdwn", "text": f"*Skills checked:*\n{checked}"},
+            {"type": "mrkdwn", "text": f"*Items checked:*\n{checked}"},
         ],
     },
     {

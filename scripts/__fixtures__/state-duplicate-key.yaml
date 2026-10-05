@@ -1,0 +1,81 @@
+# state-clean.yaml with the SCRUM-132 defect reduced to its essentials: `test_design.last_findings`
+# defined twice, the real value first and `null` second, with unrelated keys in between so the two
+# do not sit next to each other. YAML keeps the last value, so every consumer reads `null` and the
+# routing block is gone — silently, with a document that parses.
+ticket_id: SCRUM-902
+phase: test_design
+status: escalated
+mode: auto
+current_step: "1.5"
+
+configuration:
+  review_requirements: true
+  non_e2e_coverage_strategy: create_follow_up_ticket
+  max_review_iterations: 1
+  batch_threshold: 15
+  batch_size: 10
+  jira_target_status: In Review
+
+iterations:
+  design: 1
+  api: 0
+  ui: 0
+
+artifacts:
+  requirements: requirements/SCRUM-902-requirements.md
+  test_design: test-design/SCRUM-902-test-design.md
+  metrics: .workflow/metrics/SCRUM-902.jsonl
+  api_surface:
+    status: partial
+    provenance: openapi
+    match_basis: "tag (4 operations)"
+    matched_operations: 4
+    spec_gaps: 7
+    decided_by: null
+    decided_at: null
+
+test_design:
+  status: classified
+  review_status: needs_revision
+  last_findings: "Iteration 1 of 1 re-review verdict: Needs Revision. Outstanding: [DESIGN-C1] the technique matrix still prints 100% while naming two rules as not genuinely exercised. Routed: generator gets C1."
+  open_questions:
+    - "[REQ-C2] the single AC covers FR-10.1 only"
+  last_findings: null
+  unapproved_unknowns: []
+  blocked_scenarios: []
+  approved_assumptions: []
+
+automation:
+  api:
+    status: pending
+    not_applicable_reason: null
+    report: .workflow/reports/SCRUM-902-api-implementation.md
+    implemented_scenarios: []
+    created_tests: []
+    review_status: pending
+    last_findings: null
+  ui:
+    status: pending
+    not_applicable_reason: null
+    report: .workflow/reports/SCRUM-902-ui-implementation.md
+    implemented_scenarios: []
+    created_tests: []
+    review_status: pending
+    last_findings: null
+
+pull_request: null
+jira:
+  status: In Progress
+  handback_status: pending
+  comment: pending
+follow_up_tickets: []
+requirement_gaps: []
+final_decision: escalate
+declined:
+  at_step: null
+  question: null
+  reason: null
+
+history:
+  - { step: "1.5", agent: qa-scenario-reviewer, result: "Needs Revision", at: 2026-08-09,
+      note: "iterations.design 1 of 1 reached with the verdict still Needs Revision" }

@@ -1,0 +1,20 @@
+[
+  {
+    "channel": "C08ABCD1234",
+    "message_ts": "1756036800.001900",
+    "thread_ts": null,
+    "author": "U04H2K9AA",
+    "text": "Saving a new admin from the Owner Panel throws a 500. Steps: open Owner Panel, click Add admin, fill the form with a valid e-mail, submit. Expected the admin to appear in the table. Actual: red toast saying 'Internal Server Error' and the table does not change.",
+    "permalink": "https://dneprokos.slack.com/archives/C08ABCD1234/p1756036800001900",
+    "reactions": []
+  },
+  {
+    "channel": "C08ABCD1234",
+    "message_ts": "1756036950.000700",
+    "thread_ts": "1756036800.001900",
+    "author": "U04H2K9BB",
+    "text": "same here, happens for me too",
+    "permalink": "https://dneprokos.slack.com/archives/C08ABCD1234/p1756036950000700",
+    "reactions": []
+  }
+]

@@ -7,6 +7,12 @@ on:
       - ".github/skills/**"
       - ".cursor/skills/**"
       - ".claude/skills/**"
+      - ".claude/agents/**"
+      - ".github/agents/**"
+      - ".claude/hooks/**"
+      - ".claude/settings.json"
+      - ".claude-plugin/**"
+      - "plugins/**"
 
 permissions:
   contents: read
@@ -26,7 +32,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Detect changed skill folders
+      - name: Detect changed skills, agents, plugins and settings
         id: detect
         run: |
           BASE=${{ github.event.pull_request.base.sha }}
@@ -39,15 +45,44 @@ jobs:
           SKILL_DIRS=$(echo "$CHANGED" \
             | grep -E '^\.github/skills/[^/]+/' \
             | sed 's|^\(\.github/skills/[^/]*\)/.*|\1|' \
-            | sort -u)
+            | sort -u || true)
 
-          if [ -z "$SKILL_DIRS" ]; then
-            echo "No skill changes detected — skipping validation."
+          AGENT_FILES=$(echo "$CHANGED" \
+            | grep -E '^\.(claude|github)/agents/[^/]+\.md$' \
+            | sort -u || true)
+
+          PLUGIN_DIRS=$(echo "$CHANGED" \
+            | grep -E '^plugins/[^/]+/' \
+            | sed 's|^\(plugins/[^/]*\)/.*|\1|' || true)
+
+          # A marketplace change can affect any plugin entry — recheck them all
+          if echo "$CHANGED" | grep -q '^\.claude-plugin/'; then
+            ALL_PLUGINS=$(ls -d plugins/*/ 2>/dev/null | sed 's|/$||' || true)
+            PLUGIN_DIRS=$(printf '%s\n%s\n' "$PLUGIN_DIRS" "$ALL_PLUGINS")
+          fi
+          PLUGIN_DIRS=$(echo "$PLUGIN_DIRS" | sort -u)
+
+          # Hooks are validated together with the settings file that wires them
+          SETTINGS=""
+          if echo "$CHANGED" | grep -qE '^\.claude/(settings\.json$|hooks/)'; then
+            SETTINGS=".claude/settings.json"
+          fi
+
+          # Drop anything the PR deleted
+          TARGETS=""
+          for t in $SKILL_DIRS $AGENT_FILES $PLUGIN_DIRS $SETTINGS; do
+            if [ -e "$t" ]; then
+              TARGETS="$TARGETS $t"
+            fi
+          done
+          TARGETS="${TARGETS# }"
+
+          if [ -z "$TARGETS" ]; then
+            echo "No skill, agent, plugin or settings changes detected — skipping validation."
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
           else
-            echo "Skills to validate: $SKILL_DIRS"
-            DIRS_FLAT=$(echo "$SKILL_DIRS" | tr '\n' ' ' | sed 's/ $//')
-            echo "skill_dirs=$DIRS_FLAT" >> "$GITHUB_OUTPUT"
+            echo "Targets to validate: $TARGETS"
+            echo "targets=$TARGETS" >> "$GITHUB_OUTPUT"
             echo "has_changes=true" >> "$GITHUB_OUTPUT"
           fi
 
@@ -70,8 +105,8 @@ jobs:
         env:
           PYTHONUTF8: "1"
         run: |
-          SKILL_DIRS="${{ steps.detect.outputs.skill_dirs }}"
-          OUTPUT=$(python .github/skills/skill-validator/scripts/validate_skill.py $SKILL_DIRS)
+          TARGETS="${{ steps.detect.outputs.targets }}"
+          OUTPUT=$(python .github/skills/skill-validator/scripts/validate_skill.py $TARGETS)
           echo "$OUTPUT"
 
           # Write full report to file (avoids multiline quoting issues in outputs)
@@ -167,6 +202,6 @@ jobs:
           webhook-type:      incoming-webhook
           payload-file-path: ${{ env.SLACK_PAYLOAD }}
 
-      - name: No skill changes
+      - name: No validated changes
         if: steps.detect.outputs.has_changes == 'false'
-        run: echo "No .github/skills changes in this PR — validation skipped."
+        run: echo "No skill, agent, plugin or settings changes in this PR — validation skipped."

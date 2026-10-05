@@ -35,7 +35,7 @@ Do **not** use it for:
 
 - generating requirements from scratch (the user has no existing requirements to review)
 - writing test cases from requirements (use `api-test-scenario-rtm-generator` or `ut-analyst`)
-- creating Jira issues from requirements
+- creating Jira issues from requirements (use `jira-issue-creator`)
 
 ---
 

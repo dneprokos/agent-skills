@@ -34,8 +34,8 @@ Use for requests like:
 Do **not** use it for:
 
 - generating requirements from scratch (the user has no existing requirements to review)
-- writing test cases from requirements (use `api-test-scenario-generator` or `ut-analyst`)
-- creating Jira issues from requirements (use `jira-mcp-assistant`)
+- writing test cases from requirements (use `api-test-scenario-rtm-generator` or `ut-analyst`)
+- creating Jira issues from requirements (use `jira-issue-creator`)
 
 ---
 
@@ -132,9 +132,10 @@ For each extracted requirement, score every characteristic as one of:
 
 - **✅ Pass** — characteristic is clearly satisfied
 - **⚠️ Partial** — characteristic is partially met; improvement possible
-- **❌ Fail** — characteristic is not met or cannot be determined
+- **❌ Fail** — characteristic is present but clearly violated (evidence of defect, not merely unknown)
+- **➖ N/A** — characteristic cannot be assessed without context that is absent (e.g., Traceable when no business goals were provided, Feasible when no technical constraints are known). **N/A entries are excluded from the aggregate denominator** so missing context does not artificially deflate the score.
 
-Apply the rubric definitions strictly. When in doubt between Pass and Partial, choose Partial and note why.
+Apply the rubric definitions strictly. When in doubt between Pass and Partial, choose Partial and note why. Do not use ❌ simply because information is unavailable — use ➖ N/A for unknowns.
 
 ### Step 5: Identify Issues and Questions
 
@@ -148,14 +149,41 @@ Poor issue: _"This requirement is not clear."_
 For each of the 8 characteristics, compute an aggregate score (0–10) across all requirements using this formula:
 
 ```
-score = ((Pass × 1.0 + Partial × 0.5 + Fail × 0.0) / total_requirements) × 10
+score = ((Pass × 1.0 + Partial × 0.5 + Fail × 0.0) / (total_requirements − N/A_count)) × 10
 ```
 
+N/A grades are excluded from both the numerator and denominator. If **all** requirements are N/A for a characteristic (e.g., Traceable when zero business goals were provided), report the score as `—` and note the reason.
+
 Round to one decimal place.
+
+After computing individual characteristic scores, identify the **critical floor**: the lowest score among Clear, Complete, Verifiable, and Consistent. These four directly determine whether requirements can be built and tested. If the critical floor is below 6.0, flag it explicitly in the Aggregate Scores table regardless of the Overall average.
 
 ### Step 7: Produce the Report
 
 Output the full report using the template in the **Output Format** section below.
+
+---
+
+## Worked Example
+
+**Input requirement**: _"The system should quickly load user data and must not fail."_
+
+| Characteristic | Grade | Reason |
+|---|---|---|
+| Clear | ❌ | "quickly" is unmeasurable; "fail" is undefined |
+| Complete | ⚠️ | No error/timeout handling, no actor specified |
+| Consistent | ✅ | No conflicts with other requirements |
+| Verifiable | ❌ | "quickly" cannot produce a pass/fail test |
+| Feasible | ➖ | No constraints provided — N/A |
+| Traceable | ➖ | No business goal provided — N/A |
+| Atomic | ❌ | Two behaviors joined: "load data" AND "must not fail" |
+| Positive | ⚠️ | "must not fail" is negative; rewrite as "shall remain available" |
+
+**Issues**:
+- 🔴 **Clear/Verifiable**: "quickly" is vague — specify a threshold (e.g., ≤ 500 ms for 95th percentile).
+- 🔴 **Atomic**: Split into two requirements: (1) performance SLA for loading, (2) reliability/availability constraint.
+- ⚠️ **Positive**: Rewrite "must not fail" as a positive availability or reliability statement.
+- ❓ **Question**: What user data is being loaded, and what constitutes a "failure" here?
 
 ---
 
@@ -192,7 +220,7 @@ Use this exact structure. Do not add extra top-level sections; you may add sub-b
 
 _(No issues — all characteristics pass.)_
 
-… (one subsection per requirement; omit requirements with no issues only if ≥ 80% pass — otherwise include a "No issues" note to confirm they were reviewed)
+… (one subsection per requirement; omit requirements with no issues only if at least 80% of requirements have zero issues — otherwise include a "No issues" note to confirm they were reviewed)
 
 ---
 
@@ -200,8 +228,10 @@ _(No issues — all characteristics pass.)_
 
 | #   | Requirement (short) | Clear | Complete | Consistent | Verifiable | Feasible | Traceable | Atomic | Positive |
 | --- | ------------------- | ----- | -------- | ---------- | ---------- | -------- | --------- | ------ | -------- |
-| 1   | [short label]       | ✅    | ⚠️       | ✅         | ❌         | ✅       | ⚠️        | ✅     | ✅       |
+| 1   | [short label]       | ✅    | ⚠️       | ✅         | ❌         | ✅       | ➖        | ✅     | ✅       |
 | 2   | [short label]       | …     | …        | …          | …          | …        | …         | …      | …        |
+
+> Grades: ✅ Pass · ⚠️ Partial · ❌ Fail · ➖ N/A (excluded from scoring)
 
 ---
 
@@ -214,10 +244,12 @@ _(No issues — all characteristics pass.)_
 | Consistent     |     9.0      | Terminology is consistent throughout.                                  |
 | Verifiable     |     6.5      | Three requirements lack measurable acceptance criteria.                |
 | Feasible       |     7.0      | Assumed standard web-app constraints; no major red flags.              |
-| Traceable      |     3.0      | No business goals or parent requirements referenced anywhere.          |
+| Traceable      |      —       | No business goals provided; all graded N/A.                            |
 | Atomic         |     8.5      | One requirement should be split.                                       |
 | Positive       |     10.0     | All requirements state intended behavior positively.                   |
-| **Overall**    |   **7.1**    | **Weighted average across all characteristics.**                       |
+| **Overall**    |   **7.7**    | **Average across assessed characteristics (N/A excluded).** |
+
+> ⚠️ **Critical floor**: Complete = 5.0 — below 6.0 threshold. Requirements may be unbuildable without additional edge-case and error-state coverage, regardless of the Overall average.
 
 ---
 
@@ -264,7 +296,7 @@ Flag: compound requirements using "and" or ";" to join independent behaviors, re
 
 ### Positive
 
-Flag: requirements using "shall not", "must not", "will not" as the primary statement rather than as a constraint on an otherwise positive behavior. Exception: security and exclusion requirements are legitimately negative ("the system shall not expose PII to unauthenticated users").
+Flag: requirements using "shall not", "must not", "will not" as the primary statement rather than as a constraint on an otherwise positive behavior. Exception: security and exclusion requirements are legitimately negative ("the system shall not expose PII to unauthenticated users"). **Grade such legitimate negative requirements as ✅ Pass** — do not penalize intentional exclusion constraints.
 
 ---
 

@@ -28,9 +28,9 @@ Use it for requests like:
 
 Do **not** use it for:
 
-- creating non-Bug issue types (use `jira-mcp-assistant` for tasks, stories, epics)
+- creating non-Bug issue types (use `jira-issue-creator` for tasks, stories, sub-tasks)
 - triaging duplicates across existing Jira issues (use the triage-issue skill if available)
-- writing test scenarios from an endpoint (use `api-test-scenario-generator`)
+- writing test scenarios from an endpoint (use `api-test-scenario-rtm-generator`)
 
 ## Workflow
 
