@@ -9,6 +9,7 @@
       "Bash(pwsh * .github/skills/git-pr-creator/scripts/create-pr.ps1*)",
       "Bash(pwsh * .github/skills/git-push-creator/scripts/push-branch.ps1*)",
       "Bash(pwsh * .github/skills/git-workflow-orchestrator/scripts/run-git-ship-workflow.ps1*)",
+      "Bash(node .claude/skills/exploratory-testing/scripts/pw.mjs*)",
       "mcp__atlassian__*"
     ],
     "deny": [

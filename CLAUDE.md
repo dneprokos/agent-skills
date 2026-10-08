@@ -19,7 +19,7 @@ A collection of reusable agent skills for GitHub Copilot, Cursor, and Claude Cod
 | `.claude/skills/` | Manual mirror of the same skills for Claude Code |
 | `.agents/skills/` | External skills pulled via `skills-lock.json` (do not edit manually) |
 | `.github/agents/` | Orchestrator agents that coordinate multiple skills |
-| `.claude/agents/` | Claude Code sub-agents (`ut-*`, `qa-*`, `aqa-*`, `git-change-analyst`) — not mirrored |
+| `.claude/agents/` | Claude Code sub-agents (`ut-*`, `qa-*`, `aqa-*`, `et-*`, `git-change-analyst`) — not mirrored |
 | `.claude/hooks/` | Claude Code hook scripts (Node, `.mjs`) — not mirrored |
 | `plugins/`, `.claude-plugin/marketplace.json` | Claude Code plugins; this repo is a plugin marketplace named `agent-skills` |
 
@@ -33,6 +33,7 @@ pwsh .github/skills/skill-copier/scripts/Copy-Skills.ps1 -Source .github -Destin
 
 Known gaps across mirrors:
 - `brainstorming`, `unit-test-generator`, `qa-workflow`, `qa-ship-tests` — exist only in `.claude/skills/` (Claude Code specific, they spawn sub-agents)
+- `exploratory-testing` — mirrored to all three folders, but only works in Claude Code: it spawns the Claude-only `et-sitemapper` / `et-explorer` agents and its `pw.mjs` permission rule is wired in `.claude/settings.json` only
 - `hello-world`, `slack-markdown-generator-workspace` — exist only in `.cursor/skills/`
 - `jira-story-reviewer` — `.claude/skills/` copy adds a `model:` frontmatter key and table formatting; do not overwrite it blindly
 
@@ -96,6 +97,21 @@ node --test .github/skills/jira-metrics-bug-leakage/scripts/leakage.test.js
 ```
 
 `scripts/__fixtures__/**` and `scripts/__tests__/**` are pinned to LF in `.gitattributes`; tests compare bytes.
+
+## Exploratory testing workflow
+
+`exploratory-testing` (skill, main thread) asks for mode / base_url / repo / optional admin credentials / time budget, runs a preflight, then spawns two stateless sub-agents that hand off through files under `docs/exploratory/<slug>/`:
+
+- **`et-sitemapper`** — read-only; never receives credentials. Crawls live (`live`), reads the router config (`source`: React Router, Next.js `app/` + `pages/`), or merges (`both`). Writes `site-map.md` (schema: `references/site-map-schema.md`).
+- **`et-explorer`** — walks the map once under a deadline. Writes no file: returns the findings document between `=== FINDINGS BEGIN/END ===` markers and the skill saves it as `findings.md` (template: `references/findings-template.md`; checks: `references/heuristics.md`). Findings are unverified candidates.
+
+Both drive the browser only through `.claude/skills/exploratory-testing/scripts/pw.mjs`, which enforces the limits in code: same origin, one visit per normalized URL, deadline, a destructive-control deny list, a command allow-list, and credential redaction (credentials arrive as flags on every call and are never stored). Pure logic is exported from `pw.mjs` and unit-tested:
+
+```bash
+node --test ".claude/skills/exploratory-testing/scripts/__tests__/*.test.mjs"
+```
+
+`pw.mjs` is the only entry in `.claude/settings.json` for this workflow: `Bash(node .claude/skills/exploratory-testing/scripts/pw.mjs*)`. Agents must therefore write each call as one plain `node …/pw.mjs …` command (no variables, pipes or chaining). Scratch state lives in `.playwright-cli/exploratory-testing/<session>/` (gitignored).
 
 ## External skills (`skills-lock.json`)
 
